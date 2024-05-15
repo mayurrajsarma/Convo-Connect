@@ -53,12 +53,12 @@ export const getMessage = async (req,res) => {
 		const senderID = req.user._id ; // 
 
 		const conversation = await Conv.findOne({
-			participants: {$all : [senderID,userSendingMsg]},
+			participants: {$all : [senderID,usertochat]},
 		}).populate('messages') ;//NOT REFERENCE BUT ACTUAL MESSAGES
 
 		//In the conversation model, 'messages' array contains all the IDs of the message between the sender and receiver . But to get all the message contain in the 'messages' array we use mongoose method called      " populate " . It will return array of objects and put each message in these objects .
 
-		if(!conversation) return res.status(200).json([]) ;
+		if(!conversation) return res.status(200).json([]) ;//return empty array if there is no conversation.
 
 		const Messages = conversation.messages ;
 
