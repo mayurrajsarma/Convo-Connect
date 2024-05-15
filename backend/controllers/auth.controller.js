@@ -4,11 +4,12 @@ import generateTokenAndSetCookie from "../utils/generateToken.js";
 
 export const signup = async (req,res) => {
     try {
+        //get all data from body
        const {fullName,username,password,confirmPassword,gender} = req.body ; 
         if(password!==confirmPassword){
             return res.status(400).json({error:"Passwords don't match"}) ; 
         }
-        const user = await User.findOne({username}) ;
+         const user = await User.findOne({username}) ;// use await in front of all db calls
         if(user) {
                 return res.status(400).json({error:"Username already exists"}) ;
         }
@@ -33,7 +34,7 @@ export const signup = async (req,res) => {
             generateTokenAndSetCookie(newUser._id,res) ;
             await newUser.save() ;
 
-            res.status(201).json({
+            res.status(201).json({ // sending to frontend
                 _id:newUser._id,
                 fullname: newUser.fullName,
                 username: newUser.username,
@@ -55,6 +56,8 @@ export const login = async (req,res) => {
         const {username, password} = req.body ;
         const theuser = await User.findOne({username}) ;
         const isPasswordCorrect = await bcrypt.compare(password,theuser?.password || "") ;//password: password from input , theuser.password: password from DB
+        //theuser? => if the user "theuser" is undefined or null, 'theuser?.password' will return undefined and the code will not attempt to access the 'password' property of 'theuser' .
+        
         
         if(!theuser || !isPasswordCorrect) {
             return res.status(400).json({error: "Invalid username or password"}) ;
