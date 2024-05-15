@@ -1,7 +1,9 @@
 import express from "express" ;
 import dotenv from "dotenv" ;
 import authRoutes from "./routes/auth.routes.js" ;
+import messageRoutes from "./routes/message.routes.js " ;
 import connectToMongoDB from "./db/connectToMongoDB.js";
+import cookieParser from "cookie-parser";
 
 const app = express() ;
 const PORT = process.env.PORT || 8080
@@ -24,6 +26,8 @@ dotenv.config() ;
 
 app.use(express.json()) ;// to parse the incoming requests from req.body with JSON payload
 app.use("/api/auth", authRoutes) ; // whenever we visit anything starting with api/auth we will go to authRoutes
+app.use(cookieParser()) ;
+app.use("/api/messages", messageRoutes)
 
 // app.get("/",(req,res)=> {
 //     //root route http://localhost:8080/
